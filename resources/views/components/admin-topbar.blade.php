@@ -37,15 +37,23 @@
         </li> --}}
 
         <!-- Notifications Dropdown Menu -->
+        @auth
         <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-            <i class="fa fa-user mr-2"></i> <span>Virgiawan Listiyandi</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu dropdown-menu-right">
-            <a href="#" class="dropdown-item">
-            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+            <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="fa fa-user mr-2"></i> <span>{{ Auth::user()->name }}</span>
             </a>
-        </div>
+            <div class="dropdown-menu dropdown-menu dropdown-menu-right">
+                <a href="{{ route('admin.logout') }}" class="dropdown-item" onclick="
+                event.preventDefault();
+                    document.getElementById('logout-form').submit();
+                ">
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </a>
+                <form action="{{ route('admin.logout') }}" method="POST" id="logout-form">
+                    @csrf
+                </form>
+            </div>
         </li>
+        @endauth
     </ul>
     </nav>

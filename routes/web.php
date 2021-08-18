@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminPageController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\PageController;
@@ -23,8 +24,15 @@ Route::get('/article/{article:slug}', [PageController::class, 'showArticle'])->n
 Route::get('/topic/{topic:slug}', [PageController::class, 'showTopic'])->name('topics.show');
 Route::get('/search', [PageController::class, 'search'])->name('search');
 
-Route::prefix('/admin')->group(function(){
-    Route::get('/', [AdminPageController::class, 'dashboard'])->name('admin.dashboard');
-    Route::resource('/articles', ArticleController::class);
-    Route::resource('/topics', TopicController::class);
+
+Route::prefix('/admin')->group(function () {
+    Route::middleware('guest')->get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+    Route::middleware('guest')->post('/login', [AdminAuthController::class, 'login']);
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/', [AdminPageController::class, 'dashboard'])->name('admin.dashboard');
+        Route::resource('/articles', ArticleController::class);
+        Route::resource('/topics', TopicController::class);
+        Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+    });
 });
